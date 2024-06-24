@@ -51,10 +51,19 @@ namespace FinancialManagementSystem.Controllers
 
 
 		[HttpPost]
-		public async Task<ActionResult<Transfer>> PostTransfer(Transfer transfer)
+		public async Task<ActionResult<Transfer>> PostTransfer(TransferDto transferDto)
 		{
-			transfer.CreatedAt = DateTime.UtcNow;
-			transfer.UpdatedAt = DateTime.UtcNow;
+			var transfer = new Transfer
+			{
+				FromUserId = transferDto.FromUserId,
+				ToUserId = transferDto.ToUserId,
+				Amount = transferDto.Amount,
+				CurrencyType = transferDto.CurrencyType,
+				Date = transferDto.Date,
+				Description = transferDto.Description,
+				CreatedAt = DateTime.UtcNow,
+				UpdatedAt = DateTime.UtcNow
+			};
 
 			if (transfer.FromUserId == 0 || transfer.ToUserId == 0)
 			{
@@ -73,6 +82,7 @@ namespace FinancialManagementSystem.Controllers
 
 			return CreatedAtAction(nameof(GetTransfer), new { id = transfer.TransferId }, transfer);
 		}
+
 
 
 
