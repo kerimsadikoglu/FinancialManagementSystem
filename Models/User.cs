@@ -9,5 +9,6 @@
 		public DateTime CreatedAt { get; set; }
 		public DateTime UpdatedAt { get; set; }
 		public decimal TLBalance { get; set; } // TL bakiyesi
+		public ICollection<Account> Accounts { get; set; } = new List<Account>();
 	}
 }
