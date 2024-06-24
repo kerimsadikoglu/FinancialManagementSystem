@@ -2,7 +2,7 @@
     function checkAuth() {
         const userId = localStorage.getItem("userId");
         const username = localStorage.getItem("username");
-        console.log("Checking auth:", { userId, username }); // Oturum bilgilerini logla
+        console.log("Checking auth:", { userId, username });
 
         if (!userId) {
             window.location.href = "login.html";
@@ -30,10 +30,9 @@
     const userList = document.getElementById("userList");
     const transactionList = document.getElementById("transactionList");
     const transferList = document.getElementById("transferList");
+    const tlBalanceElement = document.getElementById("tlBalance");
 
-    const fromUserSelect = document.getElementById("fromUser");
     const toUserSelect = document.getElementById("toUser");
-    const transferRecordsList = document.getElementById("transferRecordsList");
 
     const apiUrl = "http://localhost:5238/api";
 
@@ -44,7 +43,6 @@
                 throw new Error("Network response was not ok");
             }
             const users = await response.json();
-            populateUserDropdown(fromUserSelect, users);
             populateUserDropdown(toUserSelect, users);
             displayUsers(users);
         } catch (error) {
@@ -52,27 +50,42 @@
         }
     }
 
-    function populateUserDropdown(dropdown, users) {
-        dropdown.innerHTML = "";
-        users.forEach(user => {
-            const option = document.createElement("option");
-            option.value = user.userId;
-            option.textContent = user.username;
-            dropdown.appendChild(option);
-        });
-
-        if (dropdown === fromUserSelect) {
-            fromUserSelect.value = localStorage.getItem("userId");
+    async function fetchUserTLBalance() {
+        const userId = localStorage.getItem("userId");
+        try {
+            const response = await fetch(`${apiUrl}/users/${userId}`);
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const user = await response.json();
+            tlBalanceElement.textContent = user.tlBalance.toFixed(2) + " TL";
+        } catch (error) {
+            console.error("Error fetching TL balance:", error);
+            tlBalanceElement.textContent = "Yüklenemedi";
         }
     }
 
-    function displayUsers(users) {
-        userList.innerHTML = "";
+    function populateUserDropdown(dropdown, users) {
+        dropdown.innerHTML = "";
         users.forEach(user => {
-            const li = document.createElement("li");
-            li.textContent = `${user.username} - ${user.email}`;
-            userList.appendChild(li);
+            if (user.userId !== parseInt(localStorage.getItem("userId"))) {
+                const option = document.createElement("option");
+                option.value = user.userId;
+                option.textContent = user.username;
+                dropdown.appendChild(option);
+            }
         });
+    }
+
+    function displayUsers(users) {
+        if (userList) {
+            userList.innerHTML = "";
+            users.forEach(user => {
+                const li = document.createElement("li");
+                li.textContent = `${user.username} - ${user.email}`;
+                userList.appendChild(li);
+            });
+        }
     }
 
     async function fetchTransactions() {
@@ -89,12 +102,14 @@
     }
 
     function displayTransactions(transactions) {
-        transactionList.innerHTML = "";
-        transactions.forEach(transaction => {
-            const li = document.createElement("li");
-            li.textContent = `${transaction.amount} - ${transaction.category} - ${transaction.date}`;
-            transactionList.appendChild(li);
-        });
+        if (transactionList) {
+            transactionList.innerHTML = "";
+            transactions.forEach(transaction => {
+                const li = document.createElement("li");
+                li.textContent = `${transaction.amount} - ${transaction.category} - ${transaction.date}`;
+                transactionList.appendChild(li);
+            });
+        }
     }
 
     async function fetchTransfers() {
@@ -112,14 +127,16 @@
     }
 
     function displayTransfers(transfers) {
-        transferList.innerHTML = "";
-        transfers.forEach(transfer => {
-            const li = document.createElement("li");
-            const transferType = transfer.fromUserId === parseInt(localStorage.getItem("userId")) ? "Gönderilen" : "Alınan";
-            const otherUser = transferType === "Gönderilen" ? transfer.toUser.username : transfer.fromUser.username;
-            li.textContent = `${transferType} - ${otherUser} - ${transfer.currencyType} - ${transfer.amount} - ${transfer.date}`;
-            transferList.appendChild(li);
-        });
+        if (transferList) {
+            transferList.innerHTML = "";
+            transfers.forEach(transfer => {
+                const li = document.createElement("li");
+                const transferType = transfer.fromUserId === parseInt(localStorage.getItem("userId")) ? "Gönderilen" : "Alınan";
+                const otherUser = transferType === "Gönderilen" ? transfer.toUser.username : transfer.fromUser.username;
+                li.textContent = `${transferType} - ${otherUser} - ${transfer.amount} TL - ${transfer.date}`;
+                transferList.appendChild(li);
+            });
+        }
     }
 
     userForm.addEventListener("submit", async function (event) {
@@ -177,21 +194,19 @@
 
     transferForm.addEventListener("submit", async function (event) {
         event.preventDefault();
-        const fromUserId = parseInt(document.getElementById("fromUser").value);
+        const fromUserId = parseInt(localStorage.getItem("userId"));
         const toUserId = parseInt(document.getElementById("toUser").value);
         const amount = parseFloat(document.getElementById("transferAmount").value);
-        const date = document.getElementById("transferDate").value;
-        const description = document.getElementById("transferDescription").value;
-        const currencyType = document.getElementById("currencyType").value;
+        const date = new Date().toISOString();
+        const description = "TL Transfer";
 
         console.log("fromUserId:", fromUserId);
         console.log("toUserId:", toUserId);
         console.log("amount:", amount);
         console.log("date:", date);
         console.log("description:", description);
-        console.log("currencyType:", currencyType);
 
-        const transferData = JSON.stringify({ fromUserId, toUserId, amount, date, description, currencyType });
+        const transferData = JSON.stringify({ fromUserId, toUserId, amount, date, description });
         console.log("Transfer Data:", transferData);
 
         try {
@@ -210,14 +225,15 @@
             }
 
             fetchTransfers();
+            fetchUserTLBalance();  // Transfer sonrası bakiyeyi güncelle
             transferForm.reset();
         } catch (error) {
             console.error("Error adding transfer:", error);
         }
     });
 
-
     fetchUsers();
     fetchTransactions();
     fetchTransfers();
+    fetchUserTLBalance();  // Sayfa yüklendiğinde bakiyeyi al
 });

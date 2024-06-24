@@ -52,6 +52,7 @@ namespace FinancialManagementSystem.Controllers
 		[HttpPost]
 		public async Task<ActionResult<User>> PostUser(User user)
 		{
+			user.TLBalance = 0;
 			_context.Users.Add(user);
 			await _context.SaveChangesAsync();
 

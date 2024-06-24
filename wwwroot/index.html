@@ -37,21 +37,24 @@
             </form>
             <ul id="transactionList"></ul>
         </section>
-
+        <section id="balance">
+            <h2>Güncel TL Bakiyesi: <span id="tlBalance">Yükleniyor...</span></h2>
+        </section>
         <section id="transfers">
-            <h2>Transfers</h2>
+            <h2>Transfer Money</h2>
             <form id="transferForm">
-                <select id="fromUser" required></select>
+                <label for="toUser">To User</label>
                 <select id="toUser" required></select>
+
                 <input type="number" id="transferAmount" placeholder="Amount" required>
-                <input type="text" id="currencyType" placeholder="Currency (e.g., USD, EUR, TL)" required>
-                <input type="date" id="transferDate" required>
-                <textarea id="transferDescription" placeholder="Description" required></textarea>
-                <button type="submit">Add Transfer</button>
+
+                <button type="submit">Transfer</button>
             </form>
+        </section>
+
+        <section id="transferRecords">
+            <h2>Transfer Records</h2>
             <ul id="transferList"></ul>
-            <h2>Your Transfer Records</h2>
-            <ul id="transferRecordsList"></ul>
         </section>
     </div>
 

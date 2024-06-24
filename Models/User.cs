@@ -8,5 +8,6 @@
 		public string Email { get; set; }
 		public DateTime CreatedAt { get; set; }
 		public DateTime UpdatedAt { get; set; }
+		public decimal TLBalance { get; set; } // TL bakiyesi
 	}
 }
