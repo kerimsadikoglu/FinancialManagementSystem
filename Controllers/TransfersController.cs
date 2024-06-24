@@ -37,14 +37,45 @@ namespace FinancialManagementSystem.Controllers
 			return transfer;
 		}
 
+		[HttpGet("user/{userId}")]
+		public async Task<ActionResult<IEnumerable<Transfer>>> GetTransfersByUser(int userId)
+		{
+			var transfers = await _context.Transfers
+				.Include(t => t.FromUser)
+				.Include(t => t.ToUser)
+				.Where(t => t.FromUserId == userId || t.ToUserId == userId)
+				.ToListAsync();
+
+			return Ok(transfers);
+		}
+
+
 		[HttpPost]
 		public async Task<ActionResult<Transfer>> PostTransfer(Transfer transfer)
 		{
-			_context.Transfers.Add(transfer);
-			await _context.SaveChangesAsync();
+			transfer.CreatedAt = DateTime.UtcNow;
+			transfer.UpdatedAt = DateTime.UtcNow;
+
+			if (transfer.FromUserId == 0 || transfer.ToUserId == 0)
+			{
+				return BadRequest(new { message = "FromUserId and ToUserId cannot be zero." });
+			}
+
+			try
+			{
+				_context.Transfers.Add(transfer);
+				await _context.SaveChangesAsync();
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(new { message = ex.Message, stackTrace = ex.StackTrace });
+			}
 
 			return CreatedAtAction(nameof(GetTransfer), new { id = transfer.TransferId }, transfer);
 		}
+
+
+
 
 		[HttpPut("{id}")]
 		public async Task<IActionResult> PutTransfer(int id, Transfer transfer)

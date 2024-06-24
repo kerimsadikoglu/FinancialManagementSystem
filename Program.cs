@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Policy ismini tanýmlayýn
 string ApiCorsPolicy = "_apiCorsPolicy";
 
-// Add services to the container.S
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

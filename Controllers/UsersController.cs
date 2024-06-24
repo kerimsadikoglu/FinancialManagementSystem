@@ -24,6 +24,18 @@ namespace FinancialManagementSystem.Controllers
 			return await _context.Users.ToListAsync();
 		}
 
+		[HttpPost("login")]
+		public async Task<IActionResult> Login([FromBody] LoginModel login)
+		{
+			var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == login.Email && u.Password == login.Password);
+			if (user == null)
+			{
+				return Unauthorized(new { message = "Invalid credentials" });
+			}
+
+			return Ok(new { userId = user.UserId, username = user.Username });
+		}
+
 		[HttpGet("{id}")]
 		public async Task<ActionResult<User>> GetUser(int id)
 		{
@@ -93,6 +105,12 @@ namespace FinancialManagementSystem.Controllers
 		private bool UserExists(int id)
 		{
 			return _context.Users.Any(e => e.UserId == id);
+		}
+
+		public class LoginModel
+		{
+			public string Email { get; set; }
+			public string Password { get; set; }
 		}
 	}
 }
