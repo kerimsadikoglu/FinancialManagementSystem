@@ -17,6 +17,7 @@
     const accountCurrencySelect = document.getElementById("accountCurrency");
     const backButton = document.getElementById("backButton");
     const tlBalanceElement = document.getElementById("tlBalance");
+    const balanceForm = document.getElementById("balanceForm");
 
     if (logoutButton) {
         logoutButton.addEventListener("click", function () {
@@ -43,9 +44,9 @@
                 throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            console.log("API response data:", data); // Debug: API yanıtını kontrol et
+            console.log("API response data:", data);
             exchangeRates = data.rates;
-            console.log("Exchange Rates:", exchangeRates); // Debug: Exchange rates kontrol et
+            console.log("Exchange Rates:", exchangeRates);
             populateCurrencyDropdown(data.rates);
         } catch (error) {
             console.error("Error fetching exchange rates:", error);
@@ -208,8 +209,8 @@
     if (accountForm) {
         accountForm.addEventListener("submit", async function (event) {
             event.preventDefault();
-            const currency = accountCurrencySelect.value.split(' - ')[0]; // Döviz türünü seçmek
-            const balance = 0; // Yeni hesap için başlangıç bakiyesi 0 olarak ayarlanır
+            const currency = accountCurrencySelect.value.split(' - ')[0];
+            const balance = 0;
             const userId = parseInt(localStorage.getItem("userId"));
 
             const accountData = { currency, balance, userId };
@@ -225,12 +226,11 @@
                 });
 
                 if (!response.ok) {
-                    const errorText = await response.text(); // JSON olarak parse etmeden önce metin olarak alın
+                    const errorText = await response.text();
                     console.error("Error adding account:", errorText);
                     throw new Error("Network response was not ok: " + errorText);
                 }
 
-                // Sayfayı yenile
                 location.reload();
             } catch (error) {
                 console.error("Error adding account:", error);
@@ -238,7 +238,48 @@
         });
     }
 
-    // exchangeRates yüklenene kadar fetchAccounts'u bekletmek için fetchExchangeRates'i çağırdıktan sonra fetchAccounts'u çağır
+    if (balanceForm) {
+        balanceForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const amount = parseFloat(document.getElementById("balanceAmount").value);
+            updateUserTLBalance(amount);
+            balanceForm.reset();
+        });
+    }
+
+    async function deleteAccount(accountId) {
+        try {
+            const response = await fetch(`${apiUrl}/accounts/${accountId}`, {
+                method: "DELETE"
+            });
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            fetchAccounts();
+        } catch (error) {
+            console.error("Error deleting account:", error);
+        }
+    }
+
+    async function updateUserTLBalance(amount) {
+        const userId = localStorage.getItem("userId");
+        try {
+            const response = await fetch(`${apiUrl}/users/${userId}/updateBalance`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ amount })
+            });
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            fetchUserTLBalance();
+        } catch (error) {
+            console.error("Error updating TL balance:", error);
+        }
+    }
+
     (async function initializePage() {
         await fetchExchangeRates();
         await fetchAccounts();

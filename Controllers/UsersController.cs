@@ -98,6 +98,29 @@ namespace FinancialManagementSystem.Controllers
 			return NoContent();
 		}
 
+		[HttpPut("{id}/updateBalance")]
+		public async Task<IActionResult> UpdateBalance(int id, [FromBody] BalanceUpdateDto balanceUpdate)
+		{
+			var user = await _context.Users.FindAsync(id);
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			user.TLBalance += balanceUpdate.Amount;
+
+			_context.Entry(user).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
+
+			return NoContent();
+		}
+
+		public class BalanceUpdateDto
+		{
+			public decimal Amount { get; set; }
+		}
+
+
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteUser(int id)
 		{

@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Financial Management System</title>
+    <title>Login</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Financial Management System - Login</h1>
+        <header>
+            <h1>Financial Management System</h1>
+        </header>
 
         <section id="login">
-            <h2>Login</h2>
             <form id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Email" required>
-                <input type="password" id="loginPassword" placeholder="Password" required>
+                <input type="text" id="fake_email" placeholder="Email" required>
+                <input type="password" id="fake_password" placeholder="Password" required>
+                <input type="hidden" id="user_email" name="user_email">
+                <input type="hidden" id="user_pass" name="user_pass">
                 <button type="submit">Login</button>
+                <button id="signupButton" type="button">Kayıt Ol</button>
             </form>
-            <button id="signupButton">Sign Up</button>
-            <p id="loginError" class="hidden">Invalid email or password</p>
         </section>
     </div>
 
