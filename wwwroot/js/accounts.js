@@ -16,6 +16,7 @@
     const accountList = document.getElementById("accountList");
     const accountCurrencySelect = document.getElementById("accountCurrency");
     const backButton = document.getElementById("backButton");
+    const tlBalanceElement = document.getElementById("tlBalance");
 
     if (logoutButton) {
         logoutButton.addEventListener("click", function () {
@@ -50,6 +51,25 @@
             populateCurrencyDropdown(data.rates);
         } catch (error) {
             console.error("Error fetching exchange rates:", error);
+        }
+    }
+
+    async function fetchUserTLBalance() {
+        const userId = localStorage.getItem("userId");
+        try {
+            const response = await fetch(`${apiUrl}/users/${userId}`);
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const user = await response.json();
+            if (tlBalanceElement) {
+                tlBalanceElement.textContent = user.tlBalance.toFixed(2) + " TL";
+            }
+        } catch (error) {
+            console.error("Error fetching TL balance:", error);
+            if (tlBalanceElement) {
+                tlBalanceElement.textContent = "Yüklenemedi";
+            }
         }
     }
 
@@ -161,4 +181,5 @@
 
     fetchExchangeRates();
     fetchAccounts();
+    fetchUserTLBalance();
 });
