@@ -77,9 +77,14 @@
         if (accountList) {
             accountList.innerHTML = "";
             accounts.forEach(account => {
-                const li = document.createElement("li");
-                li.textContent = `${account.currency} - ${account.balance}`;
-                accountList.appendChild(li);
+                const card = document.createElement("div");
+                card.className = "account-card";
+                card.innerHTML = `
+                    <h3>${account.currency}</h3>
+                    <p>Balance: ${account.balance}</p>
+                    <p>User ID: ${account.userId}</p>
+                `;
+                accountList.appendChild(card);
             });
         }
     }
@@ -87,12 +92,11 @@
     if (accountForm) {
         accountForm.addEventListener("submit", async function (event) {
             event.preventDefault();
-            const name = document.getElementById("accountName").value;
             const currency = accountCurrencySelect.value;
             const balance = parseFloat(initialBalanceInput.value);
             const userId = parseInt(localStorage.getItem("userId"));
 
-            const accountData = JSON.stringify({ name, currency, balance, userId });
+            const accountData = { currency, balance, userId };
             console.log("Submitting account:", accountData);
 
             try {
@@ -101,17 +105,17 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: accountData
+                    body: JSON.stringify(accountData)
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Error adding account:", errorData);
-                    throw new Error("Network response was not ok");
+                    const errorText = await response.text(); // JSON olarak parse etmeden önce metin olarak alın
+                    console.error("Error adding account:", errorText);
+                    throw new Error("Network response was not ok: " + errorText);
                 }
 
-                fetchAccounts();
-                accountForm.reset();
+                // Sayfayı yenile
+                location.reload();
             } catch (error) {
                 console.error("Error adding account:", error);
             }

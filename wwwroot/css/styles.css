@@ -50,3 +50,27 @@ select {
     select:focus {
         border-color: #4CAF50;
     }
+
+.account-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.account-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 200px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+    .account-card h3 {
+        margin-top: 0;
+    }
+
+    .account-card p {
+        margin: 5px 0;
+    }
+

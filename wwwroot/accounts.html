@@ -11,20 +11,18 @@
         <header>
             <h1>Account Management</h1>
             <button id="logoutButton" style="float: right;">Çıkış Yap</button>
+            <button id="backButton" style="float: right;">Geri</button>
         </header>
 
         <section id="accounts">
             <h2>Manage Accounts</h2>
             <form id="accountForm">
-                <input type="text" id="accountName" placeholder="Account Name" required>
                 <select id="accountCurrency" required></select>
                 <input type="number" id="initialBalance" placeholder="Initial Balance" required>
                 <button type="submit">Add Account</button>
             </form>
-            <ul id="accountList"></ul>
+            <div id="accountList" class="account-list"></div>
         </section>
-
-        <button id="backButton">Geri</button>
     </div>
 
     <script src="js/accounts.js"></script>
