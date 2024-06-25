@@ -1,6 +1,7 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     const loginForm = document.getElementById("loginForm");
     const loginError = document.getElementById("loginError");
+    const signupButton = document.getElementById("signupButton");
 
     loginForm.addEventListener("submit", async function (event) {
         event.preventDefault();
@@ -31,5 +32,9 @@
         } catch (error) {
             console.error("Error during login:", error);
         }
+    });
+
+    signupButton.addEventListener("click", function () {
+        window.location.href = "signup.html";
     });
 });
