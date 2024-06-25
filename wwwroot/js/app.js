@@ -13,6 +13,7 @@
 
     const logoutButton = document.getElementById("logoutButton");
     const manageAccountsButton = document.getElementById("manageAccountsButton");
+    const settingsButton = document.getElementById("settingsButton");
     const userForm = document.getElementById("userForm");
     const transactionForm = document.getElementById("transactionForm");
     const transferForm = document.getElementById("transferForm");
@@ -26,6 +27,7 @@
     const accountCurrencySelect = document.getElementById("accountCurrency");
     const initialBalanceInput = document.getElementById("initialBalance");
     const backButton = document.getElementById("backButton");
+    const transactionsButton = document.getElementById("transactionsButton");
 
     // Add null checks
     if (logoutButton) {
@@ -53,9 +55,12 @@
             window.location.href = "index.html";
         });
     }
-    transactionsButton.addEventListener("click", function () {
-        window.location.href = "transactions.html";
-    });
+
+    if (transactionsButton) {
+        transactionsButton.addEventListener("click", function () {
+            window.location.href = "transactions.html";
+        });
+    }
 
     const apiUrl = "http://localhost:5238/api";
 
@@ -308,6 +313,7 @@
                 }
 
                 fetchTransfers();
+                fetchUserTLBalance();
                 transferForm.reset();
             } catch (error) {
                 console.error("Error adding transfer:", error);
@@ -351,7 +357,6 @@
     fetchUsers();
     fetchTransactions();
     fetchTransfers();
-    //fetchAccounts();
     fetchExchangeRates();
     fetchUserTLBalance();
 });

@@ -10,16 +10,22 @@
     <div class="container">
         <header>
             <h1>Financial Management System</h1>
-            <button id="settingsButton" style="float: right; margin-right: 10px;">Ayarlar</button>
             <button id="logoutButton" style="float: right;">Çıkış Yap</button>
         </header>
 
         <button id="manageAccountsButton">Hesapları Yönet</button>
-        <button id="transactionsButton">Transactions</button>
 
-
-
-        
+        <section id="transactions">
+            <h2>Transactions</h2>
+            <form id="transactionForm">
+                <input type="number" id="amount" placeholder="Amount" required>
+                <input type="text" id="category" placeholder="Category" required>
+                <input type="date" id="date" required>
+                <textarea id="description" placeholder="Description" required></textarea>
+                <button type="submit">Add Transaction</button>
+            </form>
+            <ul id="transactionList"></ul>
+        </section>
         <section id="balance">
             <h2>Güncel TL Bakiyesi: <span id="tlBalance">Yükleniyor...</span></h2>
         </section>
