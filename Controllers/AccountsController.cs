@@ -40,6 +40,21 @@ namespace FinancialManagementSystem.Controllers
 			return Ok(accounts);
 		}
 
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> DeleteAccount(int id)
+		{
+			var account = await _context.Accounts.FindAsync(id);
+			if (account == null)
+			{
+				return NotFound();
+			}
+
+			_context.Accounts.Remove(account);
+			await _context.SaveChangesAsync();
+
+			return NoContent();
+		}
+
 		[HttpPost]
 		public async Task<ActionResult<AccountDto>> PostAccount(AccountDto accountDto)
 		{

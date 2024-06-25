@@ -80,12 +80,43 @@
                 const card = document.createElement("div");
                 card.className = "account-card";
                 card.innerHTML = `
-                    <h3>${account.currency}</h3>
+                    <div class="card-header">
+                        <h3>${account.currency}</h3>
+                        <span class="delete-icon" data-account-id="${account.accountId}">&#128465;</span>
+                    </div>
                     <p>Balance: ${account.balance}</p>
                     <p>User ID: ${account.userId}</p>
                 `;
                 accountList.appendChild(card);
             });
+
+            const deleteIcons = document.querySelectorAll(".delete-icon");
+            deleteIcons.forEach(icon => {
+                icon.addEventListener("click", function () {
+                    const accountId = this.getAttribute("data-account-id");
+                    const confirmDelete = confirm("Hesabı silmek istediğinizden emin misiniz?");
+                    if (confirmDelete) {
+                        deleteAccount(accountId);
+                    }
+                });
+            });
+        }
+    }
+
+    async function deleteAccount(accountId) {
+        try {
+            const response = await fetch(`${apiUrl}/accounts/${accountId}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            // Sayfayı yenile
+            location.reload();
+        } catch (error) {
+            console.error("Error deleting account:", error);
         }
     }
 
