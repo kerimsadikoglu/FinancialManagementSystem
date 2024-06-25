@@ -15,7 +15,6 @@
     const accountForm = document.getElementById("accountForm");
     const accountList = document.getElementById("accountList");
     const accountCurrencySelect = document.getElementById("accountCurrency");
-    const initialBalanceInput = document.getElementById("initialBalance");
     const backButton = document.getElementById("backButton");
 
     if (logoutButton) {
@@ -33,6 +32,8 @@
     }
 
     const apiUrl = "http://localhost:5238/api";
+    let exchangeRates = {};
+    let balances = {};
 
     async function fetchExchangeRates() {
         try {
@@ -41,6 +42,11 @@
                 throw new Error("Network response was not ok");
             }
             const data = await response.json();
+            console.log("API response data:", data); // Debug: API yanıtını kontrol et
+            exchangeRates = data.rates;
+            balances = { ...data.rates }; // Balances, rates ile aynı şekilde doldurulur
+            console.log("Exchange Rates:", exchangeRates); // Debug: Exchange rates kontrol et
+            console.log("Balances:", balances); // Debug: Balances kontrol et
             populateCurrencyDropdown(data.rates);
         } catch (error) {
             console.error("Error fetching exchange rates:", error);
@@ -53,7 +59,7 @@
             for (const currency in rates) {
                 const option = document.createElement("option");
                 option.value = currency;
-                option.textContent = currency;
+                option.textContent = `${currency} - ${rates[currency]}`;
                 accountCurrencySelect.appendChild(option);
             }
         }
@@ -123,8 +129,8 @@
     if (accountForm) {
         accountForm.addEventListener("submit", async function (event) {
             event.preventDefault();
-            const currency = accountCurrencySelect.value;
-            const balance = parseFloat(initialBalanceInput.value);
+            const currency = accountCurrencySelect.value.split(' - ')[0]; // Döviz türünü seçmek
+            const balance = balances[currency]; // API'den gelen balance değeri kullanılır
             const userId = parseInt(localStorage.getItem("userId"));
 
             const accountData = { currency, balance, userId };
