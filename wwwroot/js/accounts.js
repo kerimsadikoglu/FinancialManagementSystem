@@ -111,6 +111,9 @@
                     <p>Güncel Kur: ${exchangeRates[account.currency]}</p>
                     <p>Bakiye: ${account.balance}</p>
                     <p>User ID: ${account.userId}</p>
+                    <input type="number" class="amount-input" placeholder="Miktar girin">
+                    <button class="buy-button" data-account-id="${account.accountId}" data-currency="${account.currency}">Al</button>
+                    <button class="sell-button" data-account-id="${account.accountId}" data-currency="${account.currency}">Sat</button>
                 `;
                 accountList.appendChild(card);
             });
@@ -125,23 +128,80 @@
                     }
                 });
             });
+
+            const buyButtons = document.querySelectorAll(".buy-button");
+            buyButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const accountId = this.getAttribute("data-account-id");
+                    const currency = this.getAttribute("data-currency");
+                    const amountInput = this.previousElementSibling;
+                    const amount = parseFloat(amountInput.value);
+                    if (isNaN(amount) || amount <= 0) {
+                        alert("Geçerli bir miktar girin.");
+                        return;
+                    }
+                    handleBuy(accountId, currency, amount);
+                });
+            });
+
+            const sellButtons = document.querySelectorAll(".sell-button");
+            sellButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const accountId = this.getAttribute("data-account-id");
+                    const currency = this.getAttribute("data-currency");
+                    const amountInput = this.previousElementSibling.previousElementSibling;
+                    const amount = parseFloat(amountInput.value);
+                    if (isNaN(amount) || amount <= 0) {
+                        alert("Geçerli bir miktar girin.");
+                        return;
+                    }
+                    handleSell(accountId, currency, amount);
+                });
+            });
         }
     }
 
-    async function deleteAccount(accountId) {
+    async function handleBuy(accountId, currency, amount) {
+        const userId = localStorage.getItem("userId");
         try {
-            const response = await fetch(`${apiUrl}/accounts/${accountId}`, {
-                method: "DELETE",
+            const response = await fetch(`${apiUrl}/accounts/buy`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ userId, accountId, currency, amount, rate: exchangeRates[currency] })
             });
 
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
 
-            // Sayfayı yenile
-            location.reload();
+            await fetchUserTLBalance();
+            await fetchAccounts();
         } catch (error) {
-            console.error("Error deleting account:", error);
+            console.error("Error buying currency:", error);
+        }
+    }
+
+    async function handleSell(accountId, currency, amount) {
+        const userId = localStorage.getItem("userId");
+        try {
+            const response = await fetch(`${apiUrl}/accounts/sell`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ userId, accountId, currency, amount, rate: exchangeRates[currency] })
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            await fetchUserTLBalance();
+            await fetchAccounts();
+        } catch (error) {
+            console.error("Error selling currency:", error);
         }
     }
 

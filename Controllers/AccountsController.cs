@@ -40,6 +40,64 @@ namespace FinancialManagementSystem.Controllers
 			return Ok(accounts);
 		}
 
+		[HttpPost("buy")]
+		public async Task<IActionResult> Buy([FromBody] BuySellDto dto)
+		{
+			var user = await _context.Users.FindAsync(dto.UserId);
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var account = await _context.Accounts.FindAsync(dto.AccountId);
+			if (account == null)
+			{
+				return NotFound();
+			}
+
+			var cost = dto.Amount * dto.Rate;
+			if (user.TLBalance < cost)
+			{
+				return BadRequest("Yetersiz TL bakiyesi");
+			}
+
+			user.TLBalance -= cost;
+			account.Balance += dto.Amount;
+
+			await _context.SaveChangesAsync();
+
+			return Ok();
+		}
+
+		[HttpPost("sell")]
+		public async Task<IActionResult> Sell([FromBody] BuySellDto dto)
+		{
+			var user = await _context.Users.FindAsync(dto.UserId);
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var account = await _context.Accounts.FindAsync(dto.AccountId);
+			if (account == null)
+			{
+				return NotFound();
+			}
+
+			if (account.Balance < dto.Amount)
+			{
+				return BadRequest("Yetersiz döviz bakiyesi");
+			}
+
+			var revenue = dto.Amount * dto.Rate;
+			user.TLBalance += revenue;
+			account.Balance -= dto.Amount;
+
+			await _context.SaveChangesAsync();
+
+			return Ok();
+		}
+
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteAccount(int id)
 		{
