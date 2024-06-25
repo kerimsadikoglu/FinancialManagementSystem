@@ -25,7 +25,11 @@
         transactionList.innerHTML = "";
         transactions.forEach(transaction => {
             const li = document.createElement("li");
-            li.textContent = `${transaction.transactionName} - ${transaction.amount} - ${transaction.description}`;
+            li.innerHTML = `
+                ${transaction.transactionName} - ${transaction.amount} - ${transaction.description}
+                <button onclick="editTransaction(${transaction.transactionId})">Düzenle</button>
+                <button onclick="deleteTransaction(${transaction.transactionId})">Sil</button>
+            `;
             transactionList.appendChild(li);
         });
     }
@@ -65,6 +69,31 @@
             console.error("Error adding transaction:", error);
         }
     });
+
+    window.editTransaction = function (transactionId) {
+        // Redirect to edit page with transactionId
+        window.location.href = `edit-transaction.html?id=${transactionId}`;
+    };
+
+    window.deleteTransaction = async function (transactionId) {
+        if (confirm("İşlemi silmek istediğinizden emin misiniz?")) {
+            try {
+                const response = await fetch(`${apiUrl}/transactions/${transactionId}`, {
+                    method: "DELETE"
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Error deleting transaction:", errorData);
+                    throw new Error("Network response was not ok");
+                }
+
+                fetchTransactions();
+            } catch (error) {
+                console.error("Error deleting transaction:", error);
+            }
+        }
+    };
 
     fetchTransactions();
 });

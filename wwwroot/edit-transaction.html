@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Transaction</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Edit Transaction</h1>
+            <button id="backButton">Geri Dön</button>
+        </header>
+
+        <section id="edit-transaction">
+            <form id="editTransactionForm">
+                <input type="text" id="editTransactionName" placeholder="Transaction Name" required>
+                <input type="number" id="editTransactionAmount" placeholder="Amount" required>
+                <textarea id="editTransactionDescription" placeholder="Description" required></textarea>
+                <button type="submit">Update Transaction</button>
+            </form>
+        </section>
+    </div>
+
+    <script src="js/edit-transaction.js"></script>
+</body>
+</html>
