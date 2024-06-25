@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions - Financial Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Transactions</h1>
+            <button id="backButton" style="float: right;">Geri</button>
+        </header>
+
+        <form id="transactionForm">
+            <input type="text" id="transactionName" placeholder="Transaction Name" required>
+            <input type="number" id="transactionAmount" placeholder="Transaction Amount" required>
+            <textarea id="transactionDescription" placeholder="Description" required></textarea>
+            <button type="submit">Add Transaction</button>
+        </form>
+
+        <ul id="transactionList"></ul>
+    </div>
+
+    <script src="js/transactions.js"></script>
+</body>
+</html>

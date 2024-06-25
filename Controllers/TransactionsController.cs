@@ -37,10 +37,24 @@ namespace FinancialManagementSystem.Controllers
 			return transaction;
 		}
 
-
 		[HttpPost]
-		public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
+		public async Task<ActionResult<Transaction>> PostTransaction(TransactionDto transactionDto)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var transaction = new Transaction
+			{
+				UserId = transactionDto.UserId,
+				TransactionName = transactionDto.TransactionName,
+				Amount = transactionDto.Amount,
+				Description = transactionDto.Description,
+				CreatedAt = DateTime.UtcNow,
+				UpdatedAt = DateTime.UtcNow
+			};
+
 			_context.Transactions.Add(transaction);
 			await _context.SaveChangesAsync();
 
@@ -48,12 +62,18 @@ namespace FinancialManagementSystem.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutTransaction(int id, Transaction transaction)
+		public async Task<IActionResult> PutTransaction(int id, TransactionDto transactionDto)
 		{
-			if (id != transaction.TransactionId)
+			var transaction = await _context.Transactions.FindAsync(id);
+			if (transaction == null)
 			{
-				return BadRequest();
+				return NotFound();
 			}
+
+			transaction.TransactionName = transactionDto.TransactionName;
+			transaction.Amount = transactionDto.Amount;
+			transaction.Description = transactionDto.Description;
+			transaction.UpdatedAt = DateTime.UtcNow;
 
 			_context.Entry(transaction).State = EntityState.Modified;
 

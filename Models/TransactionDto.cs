@@ -1,17 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FinancialManagementSystem.Models
 {
-	public class Transaction
+	public class TransactionDto
 	{
-		public int TransactionId { get; set; }
-
 		[Required]
 		public int UserId { get; set; }
-
-		[Required]
-		public User User { get; set; }
 
 		[Required]
 		[StringLength(100)]
@@ -24,8 +18,5 @@ namespace FinancialManagementSystem.Models
 		[Required]
 		[StringLength(500)]
 		public string Description { get; set; }
-
-		public DateTime CreatedAt { get; set; }
-		public DateTime UpdatedAt { get; set; }
 	}
 }

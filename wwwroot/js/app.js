@@ -53,6 +53,9 @@
             window.location.href = "index.html";
         });
     }
+    transactionsButton.addEventListener("click", function () {
+        window.location.href = "transactions.html";
+    });
 
     const apiUrl = "http://localhost:5238/api";
 
