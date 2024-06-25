@@ -60,12 +60,22 @@ namespace FinancialManagementSystem.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<IActionResult> PutUser(int id, User user)
+		public async Task<IActionResult> PutUser(int id, [FromBody] UserDto userDto)
 		{
-			if (id != user.UserId)
+			if (id != userDto.UserId)
 			{
-				return BadRequest();
+				return BadRequest("User ID mismatch.");
 			}
+
+			var user = await _context.Users.FindAsync(id);
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			user.Username = userDto.Username;
+			user.Email = userDto.Email;
+			user.Password = userDto.Password;
 
 			_context.Entry(user).State = EntityState.Modified;
 

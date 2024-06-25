@@ -36,6 +36,12 @@
         });
     }
 
+    if (settingsButton) {
+        settingsButton.addEventListener("click", function () {
+            window.location.href = "settings.html";
+        });
+    }
+
     if (manageAccountsButton) {
         manageAccountsButton.addEventListener("click", function () {
             window.location.href = "accounts.html";
