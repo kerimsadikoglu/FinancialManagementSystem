@@ -45,9 +45,7 @@
             const data = await response.json();
             console.log("API response data:", data); // Debug: API yanıtını kontrol et
             exchangeRates = data.rates;
-            balances = { ...data.rates }; // Balances, rates ile aynı şekilde doldurulur
             console.log("Exchange Rates:", exchangeRates); // Debug: Exchange rates kontrol et
-            console.log("Balances:", balances); // Debug: Balances kontrol et
             populateCurrencyDropdown(data.rates);
         } catch (error) {
             console.error("Error fetching exchange rates:", error);
@@ -110,7 +108,8 @@
                         <h3>${account.currency}</h3>
                         <span class="delete-icon" data-account-id="${account.accountId}">&#128465;</span>
                     </div>
-                    <p>Balance: ${account.balance}</p>
+                    <p>Güncel Kur: ${exchangeRates[account.currency]}</p>
+                    <p>Bakiye: ${account.balance}</p>
                     <p>User ID: ${account.userId}</p>
                 `;
                 accountList.appendChild(card);
@@ -150,7 +149,7 @@
         accountForm.addEventListener("submit", async function (event) {
             event.preventDefault();
             const currency = accountCurrencySelect.value.split(' - ')[0]; // Döviz türünü seçmek
-            const balance = balances[currency]; // API'den gelen balance değeri kullanılır
+            const balance = 0; // Yeni hesap için başlangıç bakiyesi 0 olarak ayarlanır
             const userId = parseInt(localStorage.getItem("userId"));
 
             const accountData = { currency, balance, userId };
@@ -179,7 +178,10 @@
         });
     }
 
-    fetchExchangeRates();
-    fetchAccounts();
-    fetchUserTLBalance();
+    // exchangeRates yüklenene kadar fetchAccounts'u bekletmek için fetchExchangeRates'i çağırdıktan sonra fetchAccounts'u çağır
+    (async function initializePage() {
+        await fetchExchangeRates();
+        await fetchAccounts();
+        fetchUserTLBalance();
+    })();
 });
