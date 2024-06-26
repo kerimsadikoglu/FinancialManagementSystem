@@ -66,6 +66,21 @@
             window.location.href = "transfer.html";
         });
     }
+    document.getElementById("manageAccountsCard").addEventListener("click", function () {
+        window.location.href = "accounts.html";
+    });
+
+    document.getElementById("transactionsCard").addEventListener("click", function () {
+        window.location.href = "transactions.html";
+    });
+
+    document.getElementById("transfersCard").addEventListener("click", function () {
+        window.location.href = "transfer.html";
+    });
+
+    document.getElementById("settingsCard").addEventListener("click", function () {
+        window.location.href = "settings.html";
+    });
 
     const apiUrl = "http://localhost:5238/api";
 
