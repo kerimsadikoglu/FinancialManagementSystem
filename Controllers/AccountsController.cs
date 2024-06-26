@@ -149,5 +149,6 @@ namespace FinancialManagementSystem.Controllers
 
 			return CreatedAtAction(nameof(GetAccountsByUser), new { userId = account.UserId }, accountDto);
 		}
+
 	}
 }

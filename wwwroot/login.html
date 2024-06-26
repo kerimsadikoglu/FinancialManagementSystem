@@ -15,11 +15,14 @@
         <section id="login">
             <form id="loginForm">
                 <input type="text" id="fake_email" placeholder="Email" required>
+                <p id="emailError" style="display:none; color: red;"></p>
                 <input type="password" id="fake_password" placeholder="Password" required>
+                <p id="passwordError" style="display:none; color: red;"></p>
                 <input type="hidden" id="user_email" name="user_email">
                 <input type="hidden" id="user_pass" name="user_pass">
                 <button type="submit">Login</button>
                 <button id="signupButton" type="button">Kayıt Ol</button>
+                <p id="loginError" style="display:none; color: red;"></p>
             </form>
         </section>
     </div>

@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\accounts.html" />
     <None Include="wwwroot\css\styles.css" />
+    <None Include="wwwroot\edit-transaction.html" />
     <None Include="wwwroot\index.html" />
     <None Include="wwwroot\js\app.js" />
+    <None Include="wwwroot\login.html" />
+    <None Include="wwwroot\settings.html" />
+    <None Include="wwwroot\signup.html" />
+    <None Include="wwwroot\transactions.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +28,6 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="View\" />
   </ItemGroup>
 
 </Project>

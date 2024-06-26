@@ -6,6 +6,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    margin-top: 70px; /* Navbar yüksekliğine göre ayarla */
 }
 
 h1 {
@@ -87,4 +88,66 @@ select {
     font-size: 1.2em;
 }
 
+.image-container {
+    text-align: center;
+}
 
+    .image-container img {
+        max-width: 100%;
+        height: auto;
+    }
+
+/* Yeni eklenen navbar stilleri */
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+    .navbar a {
+        float: left;
+        display: block;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .navbar a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+/* Slider için stiller */
+.slider {
+    max-width: 100%;
+    position: relative;
+    margin: auto;
+}
+
+.slide {
+    display: none;
+}
+
+.slider img {
+    width: 100%;
+}
+
+.active-slide {
+    display: block;
+}
+
+.error-message {
+    color: red;
+    display: none;
+    margin-bottom: 10px;
+}

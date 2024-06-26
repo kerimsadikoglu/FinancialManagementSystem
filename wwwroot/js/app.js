@@ -61,6 +61,11 @@
             window.location.href = "transactions.html";
         });
     }
+    if (transfersButton) {
+        transfersButton.addEventListener("click", function () {
+            window.location.href = "transfer.html";
+        });
+    }
 
     const apiUrl = "http://localhost:5238/api";
 

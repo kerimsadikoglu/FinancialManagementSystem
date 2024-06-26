@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transferler</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Transferler</h1>
+            <button id="backButton" style="float: right;">Geri</button>
+            <button id="logoutButton" style="float: right; margin-right: 10px;">Çıkış Yap</button>
+        </header>
+
+        <section id="balance">
+            <h2>Güncel TL Bakiyesi: <span id="tlBalance">Yükleniyor...</span></h2>
+        </section>
+        <section id="transfers">
+            <h2>Transfer Money</h2>
+            <form id="transferForm">
+                <label for="toUser">To User</label>
+                <select id="toUser" required></select>
+
+                <input type="number" id="transferAmount" placeholder="Amount" required>
+
+                <button type="submit">Transfer</button>
+            </form>
+        </section>
+
+        <section id="transferRecords">
+            <h2>Transfer Records</h2>
+            <ul id="transferList"></ul>
+        </section>
+    </div>
+
+    <script src="js/transfer.js"></script>
+</body>
+</html>
