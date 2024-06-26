@@ -165,6 +165,18 @@
     async function handleBuy(accountId, currency, amount) {
         const userId = localStorage.getItem("userId");
         try {
+            // Check if user has enough TL balance
+            const userResponse = await fetch(`${apiUrl}/users/${userId}`);
+            if (!userResponse.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const user = await userResponse.json();
+            const cost = amount * exchangeRates[currency];
+            if (user.tlBalance < cost) {
+                alert("Yetersiz TL bakiyesi.");
+                return;
+            }
+
             const response = await fetch(`${apiUrl}/accounts/buy`, {
                 method: "POST",
                 headers: {
@@ -187,6 +199,17 @@
     async function handleSell(accountId, currency, amount) {
         const userId = localStorage.getItem("userId");
         try {
+            const accountResponse = await fetch(`${apiUrl}/accounts/user/${userId}`);
+            if (!accountResponse.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const accounts = await accountResponse.json();
+            const account = accounts.find(acc => acc.accountId === accountId);
+            if (!account || account.balance < amount) {
+                alert("Yetersiz döviz bakiyesi.");
+                return;
+            }
+
             const response = await fetch(`${apiUrl}/accounts/sell`, {
                 method: "POST",
                 headers: {
@@ -242,6 +265,10 @@
         balanceForm.addEventListener("submit", function (event) {
             event.preventDefault();
             const amount = parseFloat(document.getElementById("balanceAmount").value);
+            if (isNaN(amount) || amount <= 0) {
+                alert("Geçerli bir miktar girin.");
+                return;
+            }
             updateUserTLBalance(amount);
             balanceForm.reset();
         });

@@ -14,11 +14,14 @@
             <h2>Sign Up</h2>
             <form id="signupForm">
                 <input type="text" id="username" placeholder="Username" required>
+                <p class="error" style="display:none;"></p>
                 <input type="email" id="email" placeholder="Email" required>
+                <p class="error" style="display:none;"></p>
                 <input type="password" id="password" placeholder="Password" required>
+                <p class="error" style="display:none;"></p>
                 <button type="submit">Sign Up</button>
+                <p id="signupError" class="error" style="display:none;">Error during sign up</p>
             </form>
-            <p id="signupError" class="hidden">Error during sign up</p>
         </section>
     </div>
 
